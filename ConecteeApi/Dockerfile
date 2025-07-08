@@ -3,9 +3,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copiar archivos de proyecto y restaurar dependencias
-COPY *.sln ./
 COPY ConecteeApi/*.csproj ./ConecteeApi/
+WORKDIR /app/ConecteeApi
 RUN dotnet restore
+
 
 # Copiar el resto de los archivos y compilar
 COPY ConecteeApi/. ./ConecteeApi/
