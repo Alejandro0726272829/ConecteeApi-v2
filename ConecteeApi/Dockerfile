@@ -3,23 +3,22 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copiar archivos de proyecto y restaurar dependencias
-COPY ConecteeApi/*.csproj ./ConecteeApi/
-WORKDIR /app/ConecteeApi
+COPY *.csproj ./
 RUN dotnet restore
 
-
 # Copiar el resto de los archivos y compilar
-COPY ConecteeApi/. ./ConecteeApi/
-WORKDIR /app/ConecteeApi
-RUN dotnet publish -c Release -o out
+COPY . ./
+RUN dotnet publish -c Release -o out --no-restore
 
 # Imagen base para runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/ConecteeApi/out ./
+COPY --from=build /app/out ./
 
 # Puerto por defecto
 EXPOSE 80
 
 # Comando para ejecutar la aplicación
 ENTRYPOINT ["dotnet", "ConecteeApi.dll"]
+
+
