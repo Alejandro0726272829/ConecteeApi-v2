@@ -1,4 +1,4 @@
-@ConecteeApi_HostAddress = http://localhost:5229
+@ConecteeApi_HostAddress = http://localhost:8080
 
 GET {{ConecteeApi_HostAddress}}/weatherforecast/
 Accept: application/json
