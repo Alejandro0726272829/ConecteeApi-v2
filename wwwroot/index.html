@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mapa básico con Leaflet</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+4dp5l7x4mX2kQ6A0aeBqMjClPSh9D45lhgGgtPQM="
+    crossorigin=""
+  />
+  <style>
+    #map { height: 400px; width: 100%; }
+  </style>
+</head>
+<body>
+
+<h2>Mapa con ubicación GPS</h2>
+<div id="map"></div>
+<button id="locateBtn">Mostrar mi ubicación</button>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-oQo6Xn90ZQ80NfVsCpzmY2BFC+XeGI38sp4h8Jz3iqk="
+  crossorigin=""></script>
+
+<script>
+  // Crear el mapa centrado en coordenadas genéricas
+  const map = L.map('map').setView([20.67, -103.35], 13);
+
+  // Cargar capa de mapas (OpenStreetMap)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+  }).addTo(map);
+
+  // Marcador para la ubicación
+  let marker;
+
+  // Función para mostrar la ubicación del usuario
+  function locateUser() {
+    if (!navigator.geolocation) {
+      alert('Geolocalización no soportada por tu navegador');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        // Centrar mapa en la ubicación del usuario
+        map.setView([lat, lon], 15);
+
+        // Si ya existe un marcador, actualizar posición, sino crear uno nuevo
+        if (marker) {
+          marker.setLatLng([lat, lon]);
+        } else {
+          marker = L.marker([lat, lon]).addTo(map);
+        }
+      },
+      () => alert('No se pudo obtener tu ubicación')
+    );
+  }
+
+  // Botón para activar geolocalización
+  document.getElementById('locateBtn').addEventListener('click', locateUser);
+</script>
+
+</body>
+</html>

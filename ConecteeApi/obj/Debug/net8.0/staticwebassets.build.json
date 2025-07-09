@@ -1,11 +1,19 @@
 {
   "Version": 1,
-  "Hash": "xPhoCBGdssJoEcKKRmtYHV42fcjWpoHHrmxPDPDtDWU=",
+  "Hash": "PZ7Ilm2b015P6W8qA70veIZN3G+2xZOYKxOG1L+lqHc=",
   "Source": "ConecteeApi",
   "BasePath": "_content/ConecteeApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ConecteeApi/wwwroot",
+      "Source": "ConecteeApi",
+      "ContentRoot": "/workspaces/ConecteeApi/ConecteeApi/wwwroot/",
+      "BasePath": "_content/ConecteeApi",
+      "Pattern": "**"
+    }
+  ],
   "Assets": []
 }

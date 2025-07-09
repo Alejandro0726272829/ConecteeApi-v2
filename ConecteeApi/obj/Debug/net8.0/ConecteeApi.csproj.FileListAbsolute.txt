@@ -36,3 +36,4 @@
 /workspaces/ConecteeApi/ConecteeApi/obj/Debug/net8.0/ConecteeApi.pdb
 /workspaces/ConecteeApi/ConecteeApi/obj/Debug/net8.0/ConecteeApi.genruntimeconfig.cache
 /workspaces/ConecteeApi/ConecteeApi/obj/Debug/net8.0/ref/ConecteeApi.dll
+/workspaces/ConecteeApi/ConecteeApi/bin/Debug/net8.0/ConecteeApi.staticwebassets.runtime.json
