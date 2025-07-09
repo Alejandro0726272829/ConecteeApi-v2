@@ -9,8 +9,13 @@ namespace ConecteeApi.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
+        [BsonElement("nombre")]
         public string Nombre { get; set; } = null!;
+
+        [BsonElement("correo")]
         public string Correo { get; set; } = null!;
+
+        [BsonElement("telefono")]
         public string Telefono { get; set; } = null!;
     }
 }
