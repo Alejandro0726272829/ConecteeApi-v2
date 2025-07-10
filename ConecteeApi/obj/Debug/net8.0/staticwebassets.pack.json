@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "/workspaces/ConecteeApi/ConecteeApi/wwwroot/index.html",
+      "PackagePath": "staticwebassets/index.html"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.ConecteeApi.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.ConecteeApi.props",
+      "PackagePath": "build\\ConecteeApi.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.ConecteeApi.props",
+      "PackagePath": "buildMultiTargeting\\ConecteeApi.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.ConecteeApi.props",
+      "PackagePath": "buildTransitive\\ConecteeApi.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

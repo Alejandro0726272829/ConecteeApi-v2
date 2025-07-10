@@ -1,0 +1,39 @@
+{
+  "Version": 1,
+  "Hash": "guwt77/ivDMwclOZvtYeqynvgsFM7I8Mo3HmWouU8zg=",
+  "Source": "ConecteeApi",
+  "BasePath": "_content/ConecteeApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ConecteeApi/wwwroot",
+      "Source": "ConecteeApi",
+      "ContentRoot": "/workspaces/ConecteeApi/ConecteeApi/wwwroot/",
+      "BasePath": "_content/ConecteeApi",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/workspaces/ConecteeApi/ConecteeApi/wwwroot/index.html",
+      "SourceId": "ConecteeApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "/workspaces/ConecteeApi/ConecteeApi/wwwroot/",
+      "BasePath": "_content/ConecteeApi",
+      "RelativePath": "index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/index.html"
+    }
+  ]
+}

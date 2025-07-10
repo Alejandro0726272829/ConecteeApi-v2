@@ -4,7 +4,6 @@ using ConecteeApi.Services;
 using ConecteeApi.Middleware;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -18,11 +17,21 @@ builder.Services.Configure<MongoDBSettings>(
 // Registrar servicios
 builder.Services.AddScoped<IBaseService<Usuario>, UsuarioService>();
 builder.Services.AddScoped<IBaseService<Servicio>, ServicioService>();
-
-// 👇 Registro explícito para AuthController
 builder.Services.AddScoped<UsuarioService>();
 
 builder.Services.AddControllers();
+
+// Configurar CORS para permitir solo el frontend específico
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        policy =>
+        {
+            policy.WithOrigins("https://cautious-potato-pj65gw5r44gxf7v7g-3000.app.github.dev")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 // Configurar autenticación JWT
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new Exception("JWT Key no configurada"));
@@ -56,7 +65,6 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
 
-    // Configuración para que Swagger use autenticación JWT (botón Authorize)
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Ingrese el token JWT con el prefijo 'Bearer '",
@@ -84,28 +92,30 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Mostrar Swagger en raíz
+// Swagger en raíz
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Conectee API v1");
-    c.RoutePrefix = string.Empty; // Swagger en raíz
+    c.RoutePrefix = string.Empty;
 });
 
-// Middleware de errores
+// Middleware personalizado para manejo de errores
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
-// Solo usar HTTPS si NO es Docker (asumiendo entorno desarrollo)
+// Redirección HTTPS (temporalmente comentada para desarrollo)
 if (!Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER")?.Equals("true") ?? true)
 {
-    app.UseHttpsRedirection();
+    // app.UseHttpsRedirection();
 }
 
-app.UseAuthentication();
-
-app.UseAuthorization();
-
 app.UseStaticFiles();
+
+// Activar CORS antes de autenticación
+app.UseCors("AllowSpecificOrigin");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
