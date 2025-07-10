@@ -6,7 +6,7 @@ namespace ConecteeApi.Models
     public class Usuario
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonRepresentation(BsonType.ObjectId)]  // Espera string hex de 24 chars
         public string? Id { get; set; }
 
         [BsonElement("nombre")]
@@ -17,5 +17,9 @@ namespace ConecteeApi.Models
 
         [BsonElement("telefono")]
         public string Telefono { get; set; } = null!;
+
+        [BsonElement("contrasena")]
+        public string Contrasena { get; set; } = null!;
     }
 }
+
