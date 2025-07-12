@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using ConecteeApi.Models;
 using ConecteeApi.Services;
-using MongoDB.Bson;  // <-- Agregar este using
+using MongoDB.Bson;
 
 namespace ConecteeApi.Controllers
 {
@@ -25,7 +25,6 @@ namespace ConecteeApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
-            // Validar si ya existe un usuario con ese correo
             var existingUser = await _usuarioService.GetByCorreoAsync(request.Correo);
             if (existingUser != null)
                 return BadRequest("El correo ya está registrado.");
@@ -34,7 +33,7 @@ namespace ConecteeApi.Controllers
 
             var usuario = new Usuario
             {
-                Id = ObjectId.GenerateNewId().ToString(),  // <-- Aquí el cambio importante
+                Id = ObjectId.GenerateNewId().ToString(),
                 Nombre = request.Nombre,
                 Correo = request.Correo,
                 Telefono = request.Telefono,
@@ -67,7 +66,7 @@ namespace ConecteeApi.Controllers
                 new Claim(ClaimTypes.Name, usuario.Nombre)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new Exception("JWT Key no configurada")));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

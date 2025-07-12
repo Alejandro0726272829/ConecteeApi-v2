@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "f3kGz3hn7Bs=",
+  "dgSpecHash": "JjNgMKO4smk=",
   "success": true,
-  "projectFilePath": "/workspaces/ConecteeApi/ConecteeApi/ConecteeApi.csproj",
+  "projectFilePath": "/workspaces/ConecteeApi-v2/ConecteeApi/ConecteeApi.csproj",
   "expectedPackageFiles": [
     "/home/codespace/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/codespace/.nuget/packages/dnsclient/1.6.1/dnsclient.1.6.1.nupkg.sha512",

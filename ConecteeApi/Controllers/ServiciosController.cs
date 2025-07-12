@@ -1,11 +1,9 @@
 using ConecteeApi.Interfaces;
 using ConecteeApi.Models;
-using Microsoft.AspNetCore.Authorization;  // <-- Importa esto
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConecteeApi.Controllers
 {
-    [Authorize]  // <-- Agrega esta línea para proteger todo el controlador
     [ApiController]
     [Route("api/[controller]")]
     public class ServiciosController : ControllerBase
@@ -61,7 +59,7 @@ namespace ConecteeApi.Controllers
                 Destino = dto.Destino,
                 Costo = dto.Costo,
                 Estado = dto.Estado,
-                Fecha = existing.Fecha, // Conserva la fecha original
+                Fecha = existing.Fecha,
                 FechaSolicitud = existing.FechaSolicitud
             };
 
@@ -79,3 +77,4 @@ namespace ConecteeApi.Controllers
         }
     }
 }
+

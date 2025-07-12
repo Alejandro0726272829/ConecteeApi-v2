@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "guwt77/ivDMwclOZvtYeqynvgsFM7I8Mo3HmWouU8zg=",
+  "Hash": "DTc2DOegWHXAYs+KIwEChkqzZ5oxVJ9b7uqtLXnsjw4=",
   "Source": "ConecteeApi",
   "BasePath": "_content/ConecteeApi",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "ConecteeApi/wwwroot",
       "Source": "ConecteeApi",
-      "ContentRoot": "/workspaces/ConecteeApi/ConecteeApi/wwwroot/",
+      "ContentRoot": "/workspaces/ConecteeApi-v2/ConecteeApi/wwwroot/",
       "BasePath": "_content/ConecteeApi",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "/workspaces/ConecteeApi/ConecteeApi/wwwroot/index.html",
+      "Identity": "/workspaces/ConecteeApi-v2/ConecteeApi/wwwroot/index.html",
       "SourceId": "ConecteeApi",
       "SourceType": "Discovered",
-      "ContentRoot": "/workspaces/ConecteeApi/ConecteeApi/wwwroot/",
+      "ContentRoot": "/workspaces/ConecteeApi-v2/ConecteeApi/wwwroot/",
       "BasePath": "_content/ConecteeApi",
       "RelativePath": "index.html",
       "AssetKind": "All",

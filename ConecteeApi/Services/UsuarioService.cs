@@ -25,8 +25,12 @@ namespace ConecteeApi.Services
         public async Task<Usuario?> GetByIdAsync(string id) =>
             await _usuarios.Find(u => u.Id == id).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(Usuario usuario) =>
+        // Método corregido para crear usuario con contraseña hasheada
+        public async Task CreateAsync(Usuario usuario)
+        {
+            usuario.Contrasena = HashPassword(usuario.Contrasena); // Hashea la contraseña antes de guardar
             await _usuarios.InsertOneAsync(usuario);
+        }
 
         public async Task UpdateAsync(string id, Usuario usuario) =>
             await _usuarios.ReplaceOneAsync(u => u.Id == id, usuario);

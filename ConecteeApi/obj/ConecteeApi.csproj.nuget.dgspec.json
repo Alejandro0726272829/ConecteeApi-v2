@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/workspaces/ConecteeApi/ConecteeApi/ConecteeApi.csproj": {}
+    "/workspaces/ConecteeApi-v2/ConecteeApi/ConecteeApi.csproj": {}
   },
   "projects": {
-    "/workspaces/ConecteeApi/ConecteeApi/ConecteeApi.csproj": {
+    "/workspaces/ConecteeApi-v2/ConecteeApi/ConecteeApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspaces/ConecteeApi/ConecteeApi/ConecteeApi.csproj",
+        "projectUniqueName": "/workspaces/ConecteeApi-v2/ConecteeApi/ConecteeApi.csproj",
         "projectName": "ConecteeApi",
-        "projectPath": "/workspaces/ConecteeApi/ConecteeApi/ConecteeApi.csproj",
+        "projectPath": "/workspaces/ConecteeApi-v2/ConecteeApi/ConecteeApi.csproj",
         "packagesPath": "/home/codespace/.nuget/packages/",
-        "outputPath": "/workspaces/ConecteeApi/ConecteeApi/obj/",
+        "outputPath": "/workspaces/ConecteeApi-v2/ConecteeApi/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/codespace/.nuget/NuGet/NuGet.Config"

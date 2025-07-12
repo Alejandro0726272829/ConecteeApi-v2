@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ConecteeApi.Models
 {
+    [BsonIgnoreExtraElements]
     public class Usuario
     {
         [BsonId]
@@ -20,6 +21,13 @@ namespace ConecteeApi.Models
 
         [BsonElement("contrasena")]
         public string Contrasena { get; set; } = null!;
+
+        [BsonElement("rol")]
+        public string Rol { get; set; } = "Usuario";  // Valor por defecto
+
+        [BsonElement("placas")]
+        public string? Placas { get; set; }  // Puede ser null si no aplica
     }
 }
+
 
