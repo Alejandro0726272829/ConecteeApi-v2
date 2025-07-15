@@ -15,7 +15,7 @@ function Login({ onLoginSuccess }) {
 
     try {
       const url = process.env.REACT_APP_API_URL + '/api/Auth/login';
-      const response = await axios.post(url, { correo, password });
+      const response = await axios.post(url, { correo, Password });
 
       const token = response.data.token;
       localStorage.setItem('token', token);
@@ -48,7 +48,7 @@ function Login({ onLoginSuccess }) {
           <label>Contraseña:</label>
           <input
             type="password"
-            value={password}
+            value={Password}
             onChange={e => setPassword(e.target.value)}
             required
             style={{ width: '100%', padding: 8 }}
