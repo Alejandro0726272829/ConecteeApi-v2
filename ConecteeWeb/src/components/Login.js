@@ -26,8 +26,13 @@ function Login({ onLoginSuccess }) {
       onLoginSuccess();
     } catch (err) {
       setLoading(false);
-      setError('Credenciales incorrectas');
-      console.error(err);
+      console.error('Error al iniciar sesión:', err);
+
+      if (err.response && err.response.data) {
+        setError(err.response.data); // muestra el mensaje real del backend
+      } else {
+        setError('Error al conectar con el servidor');
+      }
     }
   };
 
@@ -66,5 +71,6 @@ function Login({ onLoginSuccess }) {
 }
 
 export default Login;
+
 
 
