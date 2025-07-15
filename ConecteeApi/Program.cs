@@ -28,10 +28,6 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins(
-                "https://bookish-space-adventure-7vxjr5j96xj62p47g-3000.app.github.dev",
-                "https://cautious-potato-pj65rw5r44gxf7v7g-5229.app.github.dev",
-                "http://localhost:3000",
-                "http://127.0.0.1:3000",
                 "https://conecteeweb.onrender.com" // ✅ Frontend desplegado en Render
             )
             .AllowAnyHeader()
