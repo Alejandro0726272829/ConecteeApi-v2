@@ -17,6 +17,8 @@ function Login({ onLoginSuccess }) {
       const url = process.env.REACT_APP_API_URL + '/api/Auth/login';
       const response = await axios.post(url, { correo, password });
 
+      console.log('Respuesta del backend:', response.data);
+
       const token = response.data.token;
       localStorage.setItem('token', token);
 
