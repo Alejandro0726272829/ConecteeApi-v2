@@ -21,21 +21,22 @@ builder.Services.AddScoped<UsuarioService>();
 
 builder.Services.AddControllers();
 
-// Configurar CORS para permitir múltiples frontends (producción y desarrollo)
+// Configurar CORS para permitir múltiples frontends (incluye Render)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         policy =>
         {
             policy.WithOrigins(
-                "https://bookish-space-adventure-7vxjr5j96xj62p47g-3000.app.github.dev", // frontend en GitHub Codespaces
-                "https://cautious-potato-pj65rw5r44gxf7v7g-5229.app.github.dev",      // otro frontend posible
-                "http://localhost:3000",                                              // desarrollo local React
-                "http://127.0.0.1:3000"                                               // localhost con IP
+                "https://bookish-space-adventure-7vxjr5j96xj62p47g-3000.app.github.dev",
+                "https://cautious-potato-pj65rw5r44gxf7v7g-5229.app.github.dev",
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+                "https://conecteeweb.onrender.com" // ✅ Frontend desplegado en Render
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials(); // importante para que funcione con cookies o auth
+            .AllowCredentials();
         });
 });
 
@@ -106,10 +107,10 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty;
 });
 
-// Middleware personalizado para manejo de errores
+// Middleware de errores personalizado
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
-// Redirección HTTPS (temporalmente comentada para desarrollo)
+// Redirección HTTPS (comentado si no se requiere en desarrollo)
 if (!Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER")?.Equals("true") ?? true)
 {
     // app.UseHttpsRedirection();
@@ -126,9 +127,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-
-
-
-
