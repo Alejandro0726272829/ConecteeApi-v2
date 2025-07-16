@@ -4,7 +4,7 @@ using System.IO;
 namespace ConecteeApi.Controllers
 {
     [ApiController]
-    [Route("/")]
+    [Route("home")] // ✅ Ya no es "/"
     public class HomeController : ControllerBase
     {
         [HttpGet]
