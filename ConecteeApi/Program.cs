@@ -122,4 +122,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapGet("/", () => "Conectee API funcionando 🟢");
+
+
 app.Run();
