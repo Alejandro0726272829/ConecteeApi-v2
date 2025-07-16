@@ -14,7 +14,8 @@ function Login({ onLoginSuccess }) {
     setLoading(true);
 
     try {
-      const url = process.env.REACT_APP_API_URL + '/api/Auth/login';
+      // 🔧 RUTA CORREGIDA: 'api/auth/login' en minúsculas
+      const url = process.env.REACT_APP_API_URL + '/api/auth/login';
       const response = await axios.post(url, { correo, password });
 
       console.log('Respuesta del backend:', response.data);
@@ -71,6 +72,7 @@ function Login({ onLoginSuccess }) {
 }
 
 export default Login;
+
 
 
 
