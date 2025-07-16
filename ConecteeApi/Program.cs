@@ -21,19 +21,21 @@ builder.Services.AddScoped<UsuarioService>();
 
 builder.Services.AddControllers();
 
-// Configurar CORS para permitir múltiples frontends (incluye Render)
+// Configurar CORS para múltiples orígenes (producción y localhost)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin",
-        policy =>
-        {
-            policy.WithOrigins(
-                "https://conecteeweb.onrender.com" // ✅ Frontend desplegado en Render
-            )
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-        });
+    options.AddPolicy("AllowSpecificOrigin", policy =>
+    {
+        policy.WithOrigins(
+            "https://conecteeweb.onrender.com",    // Frontend producción Render v1
+            "https://conecteeweb-v2.onrender.com", // Frontend producción Render v2
+            "https://conecteeweb-v3.onrender.com", // Frontend producción Render v3 - nuevo
+            "http://localhost:3000"                 // Frontend local para desarrollo
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+    });
 });
 
 // Configurar autenticación JWT
@@ -106,15 +108,15 @@ app.UseSwaggerUI(c =>
 // Middleware de errores personalizado
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
-// Redirección HTTPS (comentado si no se requiere en desarrollo)
-if (!Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER")?.Equals("true") ?? true)
-{
-    // app.UseHttpsRedirection();
-}
+// Redirección HTTPS (opcional - descomenta si usas HTTPS en producción)
+// if (!Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER")?.Equals("true") ?? true)
+// {
+//     app.UseHttpsRedirection();
+// }
 
 app.UseStaticFiles();
 
-// Activar CORS antes de autenticación
+// Activar CORS antes de autenticación y autorización
 app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
@@ -124,5 +126,5 @@ app.MapControllers();
 
 app.MapGet("/", () => "Conectee API funcionando 🟢");
 
-
 app.Run();
+
