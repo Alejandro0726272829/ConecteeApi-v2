@@ -5,7 +5,7 @@ import axios from 'axios';
 import Login from './components/Login';
 import logo from './logo.svg';
 import MapaConectee from './components/MapaConectee';
-import UbicacionUsuario from './components/UbicacionUsuario'; // nuevo
+import UbicacionUsuario from './components/UbicacionUsuario';
 
 function App() {
   const [servicios, setServicios] = useState([]);
@@ -45,7 +45,6 @@ function App() {
       });
   }, [isLoggedIn]);
 
-  // Prepara los marcadores para el mapa
   const marcadoresServicios = servicios
     .filter(s => s.lat && s.lng)
     .map(s => ({
@@ -54,7 +53,6 @@ function App() {
       nombre: s.nombre || 'Sin nombre',
     }));
 
-  // Combinar marcadores de servicios con ubicación del usuario si existe
   const marcadores = ubicacionUsuario
     ? [...marcadoresServicios, { ...ubicacionUsuario, nombre: 'Tu ubicación 📍' }]
     : marcadoresServicios;
@@ -65,6 +63,27 @@ function App() {
         <Login onLoginSuccess={handleLoginSuccess} />
       ) : (
         <>
+          {/* Botón para cerrar sesión */}
+          <button
+            onClick={() => {
+              localStorage.removeItem('token');
+              setIsLoggedIn(false);
+            }}
+            style={{
+              position: 'absolute',
+              top: 20,
+              right: 20,
+              padding: '8px 12px',
+              backgroundColor: '#ff4444',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 4,
+              cursor: 'pointer'
+            }}
+          >
+            Cerrar sesión
+          </button>
+
           <img src={logo} className="App-logo" alt="logo" />
           <h1>Lista de Servicios</h1>
 
@@ -94,6 +113,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
