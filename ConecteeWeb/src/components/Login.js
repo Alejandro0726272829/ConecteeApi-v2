@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import logo from '../logo.svg';
+import ForgotPassword from './ForgotPassword';
 
 function Login({ onLoginSuccess }) {
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [mostrarOlvido, setMostrarOlvido] = useState(false); // 🔑 nuevo estado
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -14,7 +16,6 @@ function Login({ onLoginSuccess }) {
     setLoading(true);
 
     try {
-      // 🔧 Asegúrate de tener REACT_APP_API_URL definida en .env
       const url = process.env.REACT_APP_API_URL + '/api/auth/login';
       const response = await axios.post(url, { correo, password });
 
@@ -26,7 +27,7 @@ function Login({ onLoginSuccess }) {
       console.log('Token recibido:', token);
 
       setLoading(false);
-      onLoginSuccess(); // redirige al dashboard u otra vista protegida
+      onLoginSuccess();
     } catch (err) {
       setLoading(false);
       console.error('Error al iniciar sesión:', err);
@@ -38,6 +39,11 @@ function Login({ onLoginSuccess }) {
       }
     }
   };
+
+  // 🔁 Mostrar pantalla de recuperación si se activa
+  if (mostrarOlvido) {
+    return <ForgotPassword onVolverAlLogin={() => setMostrarOlvido(false)} />;
+  }
 
   return (
     <div style={{
@@ -82,12 +88,30 @@ function Login({ onLoginSuccess }) {
         >
           {loading ? 'Ingresando...' : 'Iniciar sesión'}
         </button>
+
+        {/* 🔗 Enlace para recuperar contraseña */}
+        <p style={{ marginTop: 15 }}>
+          <button
+            onClick={() => setMostrarOlvido(true)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#00f',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              padding: 0
+            }}
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
+        </p>
       </form>
     </div>
   );
 }
 
 export default Login;
+
 
 
 
