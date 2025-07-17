@@ -14,7 +14,7 @@ function Login({ onLoginSuccess }) {
     setLoading(true);
 
     try {
-      // 🔧 RUTA CORREGIDA: 'api/auth/login' en minúsculas
+      // 🔧 Asegúrate de tener REACT_APP_API_URL definida en .env
       const url = process.env.REACT_APP_API_URL + '/api/auth/login';
       const response = await axios.post(url, { correo, password });
 
@@ -23,14 +23,16 @@ function Login({ onLoginSuccess }) {
       const token = response.data.token;
       localStorage.setItem('token', token);
 
+      console.log('Token recibido:', token);
+
       setLoading(false);
-      onLoginSuccess();
+      onLoginSuccess(); // redirige al dashboard u otra vista protegida
     } catch (err) {
       setLoading(false);
       console.error('Error al iniciar sesión:', err);
 
       if (err.response && err.response.data) {
-        setError(err.response.data); // muestra el mensaje real del backend
+        setError(err.response.data?.mensaje || 'Error al iniciar sesión');
       } else {
         setError('Error al conectar con el servidor');
       }
@@ -38,10 +40,17 @@ function Login({ onLoginSuccess }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', paddingTop: 40, backgroundColor: '#000', color: 'white', textAlign: 'center' }}>
+    <div style={{
+      minHeight: '100vh',
+      paddingTop: 40,
+      backgroundColor: '#000',
+      color: 'white',
+      textAlign: 'center'
+    }}>
       <img src={logo} className="App-logo" alt="logo" />
       <form onSubmit={handleLogin} style={{ maxWidth: 300, margin: 'auto' }}>
         <h2>Iniciar sesión</h2>
+
         <div style={{ marginBottom: 10, textAlign: 'left' }}>
           <label>Correo:</label>
           <input
@@ -52,6 +61,7 @@ function Login({ onLoginSuccess }) {
             style={{ width: '100%', padding: 8 }}
           />
         </div>
+
         <div style={{ marginBottom: 10, textAlign: 'left' }}>
           <label>Contraseña:</label>
           <input
@@ -62,8 +72,14 @@ function Login({ onLoginSuccess }) {
             style={{ width: '100%', padding: 8 }}
           />
         </div>
+
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit" disabled={loading} style={{ padding: 10, width: '100%' }}>
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ padding: 10, width: '100%' }}
+        >
           {loading ? 'Ingresando...' : 'Iniciar sesión'}
         </button>
       </form>
@@ -72,6 +88,7 @@ function Login({ onLoginSuccess }) {
 }
 
 export default Login;
+
 
 
 
