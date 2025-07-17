@@ -18,6 +18,7 @@ builder.Services.Configure<MongoDBSettings>(
 builder.Services.AddScoped<IBaseService<Usuario>, UsuarioService>();
 builder.Services.AddScoped<IBaseService<Servicio>, ServicioService>();
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 
 builder.Services.AddControllers();
 
