@@ -1,9 +1,9 @@
+using ConecteeApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using ConecteeApi.Models;
 using ConecteeApi.Services;
 using MongoDB.Bson;
 using System.Threading.Tasks;
