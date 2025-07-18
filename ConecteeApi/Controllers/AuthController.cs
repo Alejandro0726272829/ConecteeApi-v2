@@ -6,6 +6,9 @@ using System.Text;
 using ConecteeApi.Models;
 using ConecteeApi.Services;
 using MongoDB.Bson;
+using System.Threading.Tasks;
+using System;
+using ConecteeApi.Interfaces;
 
 namespace ConecteeApi.Controllers
 {
@@ -15,11 +18,13 @@ namespace ConecteeApi.Controllers
     {
         private readonly UsuarioService _usuarioService;
         private readonly IConfiguration _configuration;
+        private readonly IPasswordResetService _passwordResetService;
 
-        public AuthController(UsuarioService usuarioService, IConfiguration configuration)
+        public AuthController(UsuarioService usuarioService, IConfiguration configuration, IPasswordResetService passwordResetService)
         {
             _usuarioService = usuarioService;
             _configuration = configuration;
+            _passwordResetService = passwordResetService;
         }
 
         [HttpPost("register")]
@@ -77,6 +82,49 @@ namespace ConecteeApi.Controllers
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        [HttpPost("recuperar-password")]
+        public async Task<IActionResult> RecuperarPassword([FromBody] string correo)
+        {
+            try
+            {
+                var usuario = await _usuarioService.GetByCorreoAsync(correo);
+                if (usuario == null)
+                    return NotFound(new { mensaje = "Correo no registrado." });
+
+                await _passwordResetService.CrearTokenAsync(correo);
+                return Ok(new { mensaje = "Se ha enviado un enlace para restablecer la contraseña." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error interno.", detalle = ex.Message });
+            }
+        }
+
+        [HttpPost("restablecer-password")]
+        public async Task<IActionResult> RestablecerPassword([FromBody] RestablecerPasswordRequest request)
+        {
+            try
+            {
+                var resetToken = await _passwordResetService.ObtenerTokenAsync(request.Token);
+                if (resetToken == null || resetToken.Expiration < DateTime.UtcNow)
+                    return BadRequest(new { mensaje = "Token inválido o expirado." });
+
+                var usuario = await _usuarioService.GetByCorreoAsync(resetToken.Correo);
+                if (usuario == null)
+                    return NotFound(new { mensaje = "Usuario no encontrado." });
+
+                usuario.Contrasena = _usuarioService.HashPassword(request.NuevaPassword);
+                await _usuarioService.ActualizarAsync(usuario.Id!, usuario);
+                await _passwordResetService.EliminarTokenAsync(request.Token);
+
+                return Ok(new { mensaje = "Contraseña actualizada correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error interno.", detalle = ex.Message });
+            }
         }
     }
 }
