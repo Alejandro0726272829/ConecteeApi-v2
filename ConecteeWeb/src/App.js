@@ -27,7 +27,7 @@ function App() {
       return;
     }
 
-    const url = process.env.REACT_APP_API_URL + '/api/Servicios';
+    const url = `${process.env.REACT_APP_API_URL}/api/Servicios`;
     console.log('Llamando a:', url);
 
     axios.get(url, {
@@ -35,14 +35,14 @@ function App() {
         Authorization: `Bearer ${token}`,
       }
     })
-      .then(response => {
-        setServicios(response.data);
-        setError(null);
-      })
-      .catch(err => {
-        setError('Error al cargar los servicios');
-        console.error(err);
-      });
+    .then(response => {
+      setServicios(response.data);
+      setError(null);
+    })
+    .catch(err => {
+      setError('Error al cargar los servicios');
+      console.error(err);
+    });
   }, [isLoggedIn]);
 
   const marcadoresServicios = servicios
@@ -57,18 +57,21 @@ function App() {
     ? [...marcadoresServicios, { ...ubicacionUsuario, nombre: 'Tu ubicación 📍' }]
     : marcadoresServicios;
 
+  const cerrarSesion = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setServicios([]);
+    setUbicacionUsuario(null);
+  };
+
   return (
     <div style={{ minHeight: '100vh', padding: '20px', textAlign: 'center', color: 'white' }}>
       {!isLoggedIn ? (
         <Login onLoginSuccess={handleLoginSuccess} />
       ) : (
         <>
-          {/* Botón para cerrar sesión */}
           <button
-            onClick={() => {
-              localStorage.removeItem('token');
-              setIsLoggedIn(false);
-            }}
+            onClick={cerrarSesion}
             style={{
               position: 'absolute',
               top: 20,
@@ -87,10 +90,10 @@ function App() {
           <img src={logo} className="App-logo" alt="logo" />
           <h1>Lista de Servicios</h1>
 
-          {/* Mostrar componente de ubicación */}
           <UbicacionUsuario onUbicacionObtenida={setUbicacionUsuario} />
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
+          
           <ul>
             {servicios.map(servicio => (
               <li key={servicio._id || servicio.id}>
@@ -99,7 +102,6 @@ function App() {
             ))}
           </ul>
 
-          {/* Mostrar el mapa solo si hay marcadores */}
           {marcadores.length > 0 && (
             <>
               <h2>Mapa de Servicios</h2>
@@ -113,6 +115,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
