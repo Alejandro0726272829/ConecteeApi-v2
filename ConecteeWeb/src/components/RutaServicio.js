@@ -5,9 +5,9 @@ import "leaflet-routing-machine";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
-// ICONOS PERSONALIZADOS (Fácil cambiar los URLs o importarlos)
+// ICONOS PERSONALIZADOS
 const truckIconUrl = "https://cdn-icons-png.flaticon.com/512/1995/1995523.png"; // camión
-const homeIconUrl = "https://cdn-icons-png.flaticon.com/512/25/25694.png";      // casa/bodega
+const homeIconUrl = "https://cdn-icons-png.flaticon.com/512/25/25694.png";      // casa
 
 const truckIcon = new L.Icon({
   iconUrl: truckIconUrl,
@@ -23,13 +23,12 @@ const homeIcon = new L.Icon({
   popupAnchor: [0, -35],
 });
 
-// Componente para controlar la ruta con Leaflet Routing Machine
 function RoutingMachine({ origen, destino, onRouteChange }) {
   const map = useMap();
   const routingControlRef = useRef(null);
 
   useEffect(() => {
-    if (!origen || !destino) return;
+    if (!origen?.lat || !destino?.lat) return;
 
     if (routingControlRef.current) {
       map.removeControl(routingControlRef.current);
@@ -47,16 +46,15 @@ function RoutingMachine({ origen, destino, onRouteChange }) {
       draggableWaypoints: false,
       fitSelectedRoutes: true,
       show: false,
-      createMarker: () => null, // no crear markers automáticos, usamos los personalizados abajo
+      createMarker: () => null,
     }).addTo(map);
 
     routingControlRef.current.on("routesfound", (e) => {
       const route = e.routes[0];
-      // Enviar distancia y duración a componente padre
       onRouteChange({
-        distance: route.summary.totalDistance, // metros
-        time: route.summary.totalTime,         // segundos
-        coordinates: route.coordinates,        // para animación
+        distance: route.summary.totalDistance,
+        time: route.summary.totalTime,
+        coordinates: route.coordinates,
       });
     });
 
@@ -70,7 +68,6 @@ function RoutingMachine({ origen, destino, onRouteChange }) {
   return null;
 }
 
-// Componente para animar el movimiento del camión
 function MovingMarker({ coordinates }) {
   const markerRef = useRef(null);
   const [index, setIndex] = useState(0);
@@ -87,7 +84,7 @@ function MovingMarker({ coordinates }) {
         }
         return prev + 1;
       });
-    }, 500); // mueve el marcador cada 500ms (ajustable)
+    }, 500);
 
     return () => clearInterval(interval);
   }, [coordinates]);
@@ -105,7 +102,6 @@ function MovingMarker({ coordinates }) {
   );
 }
 
-// Formatear segundos a h:mm:ss
 function formatTime(seconds) {
   const hrs = Math.floor(seconds / 3600);
   const mins = Math.floor((seconds % 3600) / 60);
@@ -119,17 +115,13 @@ export default function RutaServicio({
   onCerrar,
   conductorNombre = "Conductor",
   clienteNombre = "Cliente",
-  tiempoRecolectaSeg = 300, // 5 min estimado de espera/recolecta
+  tiempoRecolectaSeg = 300,
 }) {
   const [routeInfo, setRouteInfo] = useState(null);
-  const [actualizarKey, setActualizarKey] = useState(0); // para forzar rerender ruta
-
-  // Simulación seguimiento camión (en producción esto vendría via socket o polling)
-  // Aquí lo simulamos con coords en ruta
+  const [actualizarKey, setActualizarKey] = useState(0);
   const [camionCoords, setCamionCoords] = useState([]);
   const [mostrarAnimacion, setMostrarAnimacion] = useState(false);
 
-  // Cuando cambia la ruta, actualizamos coords para animación y reiniciamos marcador
   useEffect(() => {
     if (routeInfo?.coordinates) {
       setCamionCoords(routeInfo.coordinates);
@@ -138,23 +130,26 @@ export default function RutaServicio({
   }, [routeInfo]);
 
   const handleActualizarRuta = () => {
-    setActualizarKey((k) => k + 1); // cambiar key para reiniciar RoutingMachine
+    setActualizarKey((k) => k + 1);
     setMostrarAnimacion(false);
     setCamionCoords([]);
   };
 
-  // Cálculos de tiempo aproximados
-  // Tiempo tránsito en ruta (en minutos)
   const tiempoTransito = routeInfo ? routeInfo.time : 0;
-  // Tiempo estimado para llegar a recolectar (conduce a origen)
-  const tiempoLlegadaRecolecta = tiempoTransito / 2; // suposición: mitad del camino (ajustable)
-  // Tiempo estimado entrega (origen->destino + espera)
+  const tiempoLlegadaRecolecta = tiempoTransito / 2;
   const tiempoEntrega = tiempoTransito + tiempoRecolectaSeg;
 
-  // Punto medio para mostrar info tiempo aproximado (en popup o abajo)
   const puntoMedio = routeInfo
     ? routeInfo.coordinates[Math.floor(routeInfo.coordinates.length / 2)]
     : null;
+
+  if (!origen?.lat || !destino?.lat) {
+    return (
+      <div style={{ color: "white", padding: 20 }}>
+        <p>Error: coordenadas de origen o destino inválidas.</p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -207,7 +202,7 @@ export default function RutaServicio({
       </button>
 
       <MapContainer
-        key={actualizarKey} // fuerza rerender del mapa para refrescar ruta
+        key={actualizarKey}
         center={[origen.lat, origen.lng]}
         zoom={13}
         scrollWheelZoom={true}
@@ -233,10 +228,7 @@ export default function RutaServicio({
           onRouteChange={setRouteInfo}
         />
 
-        {/* Animación camión */}
-        {mostrarAnimacion && (
-          <MovingMarker coordinates={camionCoords} />
-        )}
+        {mostrarAnimacion && <MovingMarker coordinates={camionCoords} />}
       </MapContainer>
 
       <div
@@ -259,4 +251,5 @@ export default function RutaServicio({
     </div>
   );
 }
+
 
