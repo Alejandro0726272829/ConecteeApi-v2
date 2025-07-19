@@ -28,7 +28,15 @@ function RoutingMachine({ origen, destino, onRouteChange }) {
   const routingControlRef = useRef(null);
 
   useEffect(() => {
-    if (!origen?.lat || !destino?.lat) return;
+    // Validación estricta para evitar errores si faltan lat o lng
+    if (
+      !origen ||
+      !destino ||
+      typeof origen.lat !== "number" ||
+      typeof origen.lng !== "number" ||
+      typeof destino.lat !== "number" ||
+      typeof destino.lng !== "number"
+    ) return;
 
     if (routingControlRef.current) {
       map.removeControl(routingControlRef.current);
@@ -139,11 +147,14 @@ export default function RutaServicio({
   const tiempoLlegadaRecolecta = tiempoTransito / 2;
   const tiempoEntrega = tiempoTransito + tiempoRecolectaSeg;
 
-  const puntoMedio = routeInfo
-    ? routeInfo.coordinates[Math.floor(routeInfo.coordinates.length / 2)]
-    : null;
-
-  if (!origen?.lat || !destino?.lat) {
+  if (
+    !origen ||
+    !destino ||
+    typeof origen.lat !== "number" ||
+    typeof origen.lng !== "number" ||
+    typeof destino.lat !== "number" ||
+    typeof destino.lng !== "number"
+  ) {
     return (
       <div style={{ color: "white", padding: 20 }}>
         <p>Error: coordenadas de origen o destino inválidas.</p>
@@ -251,5 +262,7 @@ export default function RutaServicio({
     </div>
   );
 }
+
+  
 
 
