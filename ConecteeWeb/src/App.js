@@ -6,6 +6,7 @@ import Login from './components/Login';
 import logo from './logo.svg';
 import MapaConectee from './components/MapaConectee';
 import UbicacionUsuario from './components/UbicacionUsuario';
+import RutaServicio from './components/RutaServicio';
 
 function App() {
   const [servicios, setServicios] = useState([]);
