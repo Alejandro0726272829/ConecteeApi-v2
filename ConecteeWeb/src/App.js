@@ -7,6 +7,7 @@ import logo from './logo.svg';
 import MapaConectee from './components/MapaConectee';
 import UbicacionUsuario from './components/UbicacionUsuario';
 import RutaServicio from './components/RutaServicio';
+import Icono from './components/Icono'; // ✅ Nuevo componente
 
 function App() {
   const [servicios, setServicios] = useState([]);
@@ -100,10 +101,10 @@ function App() {
           <img src={logo} className="App-logo" alt="logo" />
           <h1>Crear nuevo servicio</h1>
 
-          <RutaServicio
-            onServicioCreado={handleServicioCreado}
-          />
+          {/* ✅ Mostrar iconos de camión y bodega */}
+          <Icono />
 
+          <RutaServicio onServicioCreado={handleServicioCreado} />
           <UbicacionUsuario onUbicacionObtenida={setUbicacionUsuario} />
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -117,7 +118,6 @@ function App() {
             ))}
           </ul>
 
-          {/* Mostrar mapa con los servicios y ubicación */}
           {marcadoresServicios.length > 0 && (
             <>
               <h2>Mapa de Servicios</h2>
@@ -125,7 +125,6 @@ function App() {
             </>
           )}
 
-          {/* Mapa con ubicación del usuario */}
           {marcadores.length > 0 && (
             <>
               <h2>Tu ubicación</h2>
@@ -139,16 +138,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
