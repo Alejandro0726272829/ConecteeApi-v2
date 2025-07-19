@@ -7,7 +7,7 @@ import logo from './logo.svg';
 import MapaConectee from './components/MapaConectee';
 import UbicacionUsuario from './components/UbicacionUsuario';
 import RutaServicio from './components/RutaServicio';
-import Icono from './components/Icono'; // ✅ Nuevo componente
+import Icono from './components/Icono';
 
 function App() {
   const [servicios, setServicios] = useState([]);
@@ -53,19 +53,22 @@ function App() {
     setServicios(prev => [...prev, nuevoServicio]);
   };
 
-  // Marcadores para mostrar en el mapa
+  // Marcadores de servicios válidos
   const marcadoresServicios = servicios
-    .filter(s => s.origenLat && s.origenLng && s.destinoLat && s.destinoLng)
+    .filter(s => s.origenLat && s.origenLng)
     .map(s => ({
-      origen: { lat: Number(s.origenLat), lng: Number(s.origenLng) },
-      destino: { lat: Number(s.destinoLat), lng: Number(s.destinoLng) },
-      nombre: s.nombre || 'Sin nombre',
+      lat: Number(s.origenLat),
+      lng: Number(s.origenLng),
+      nombre: s.nombre || 'Origen',
     }));
 
-  // Añadimos marcador de ubicación del usuario
-  const marcadores = ubicacionUsuario
+  // Marcador de usuario
+  const marcadorUsuario = ubicacionUsuario
     ? [{ ...ubicacionUsuario, nombre: 'Tu ubicación 📍' }]
     : [];
+
+  // Todos los marcadores para el mapa
+  const marcadores = [...marcadoresServicios, ...marcadorUsuario];
 
   const cerrarSesion = () => {
     localStorage.removeItem('token');
@@ -101,9 +104,7 @@ function App() {
           <img src={logo} className="App-logo" alt="logo" />
           <h1>Crear nuevo servicio</h1>
 
-          {/* ✅ Mostrar iconos de camión y bodega */}
           <Icono />
-
           <RutaServicio onServicioCreado={handleServicioCreado} />
           <UbicacionUsuario onUbicacionObtenida={setUbicacionUsuario} />
 
@@ -118,17 +119,10 @@ function App() {
             ))}
           </ul>
 
-          {marcadoresServicios.length > 0 && (
-            <>
-              <h2>Mapa de Servicios</h2>
-              <MapaConectee marcadores={marcadoresServicios.map(s => s.origen)} zoom={12} />
-            </>
-          )}
-
           {marcadores.length > 0 && (
             <>
-              <h2>Tu ubicación</h2>
-              <MapaConectee marcadores={marcadores} zoom={14} />
+              <h2>Mapa</h2>
+              <MapaConectee marcadores={marcadores} zoom={13} />
             </>
           )}
         </>
@@ -138,3 +132,4 @@ function App() {
 }
 
 export default App;
+
