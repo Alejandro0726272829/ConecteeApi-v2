@@ -13,12 +13,14 @@ function App() {
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [ubicacionUsuario, setUbicacionUsuario] = useState(null);
+  const [servicioCreado, setServicioCreado] = useState(null);
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
     setError(null);
   };
 
+  // Cargar servicios cuando hay login
   useEffect(() => {
     if (!isLoggedIn) return;
 
@@ -29,8 +31,6 @@ function App() {
     }
 
     const url = `${process.env.REACT_APP_API_URL}/api/Servicios`;
-    console.log('Llamando a:', url);
-
     axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,23 +46,32 @@ function App() {
     });
   }, [isLoggedIn]);
 
+  // Función para cuando se crea un servicio nuevo
+  const handleServicioCreado = (nuevoServicio) => {
+    setServicioCreado(nuevoServicio);
+    setServicios(prev => [...prev, nuevoServicio]);
+  };
+
+  // Marcadores para mostrar en el mapa
   const marcadoresServicios = servicios
-    .filter(s => s.lat && s.lng)
+    .filter(s => s.origenLat && s.origenLng && s.destinoLat && s.destinoLng)
     .map(s => ({
-      lat: Number(s.lat),
-      lng: Number(s.lng),
+      origen: { lat: Number(s.origenLat), lng: Number(s.origenLng) },
+      destino: { lat: Number(s.destinoLat), lng: Number(s.destinoLng) },
       nombre: s.nombre || 'Sin nombre',
     }));
 
+  // Añadimos marcador de ubicación del usuario
   const marcadores = ubicacionUsuario
-    ? [...marcadoresServicios, { ...ubicacionUsuario, nombre: 'Tu ubicación 📍' }]
-    : marcadoresServicios;
+    ? [{ ...ubicacionUsuario, nombre: 'Tu ubicación 📍' }]
+    : [];
 
   const cerrarSesion = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
     setServicios([]);
     setUbicacionUsuario(null);
+    setServicioCreado(null);
   };
 
   return (
@@ -89,12 +98,17 @@ function App() {
           </button>
 
           <img src={logo} className="App-logo" alt="logo" />
-          <h1>Lista de Servicios</h1>
+          <h1>Crear nuevo servicio</h1>
+
+          <RutaServicio
+            onServicioCreado={handleServicioCreado}
+          />
 
           <UbicacionUsuario onUbicacionObtenida={setUbicacionUsuario} />
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
-          
+
+          <h2>Lista de Servicios</h2>
           <ul>
             {servicios.map(servicio => (
               <li key={servicio._id || servicio.id}>
@@ -103,10 +117,19 @@ function App() {
             ))}
           </ul>
 
-          {marcadores.length > 0 && (
+          {/* Mostrar mapa con los servicios y ubicación */}
+          {marcadoresServicios.length > 0 && (
             <>
               <h2>Mapa de Servicios</h2>
-              <MapaConectee marcadores={marcadores} zoom={12} />
+              <MapaConectee marcadores={marcadoresServicios.map(s => s.origen)} zoom={12} />
+            </>
+          )}
+
+          {/* Mapa con ubicación del usuario */}
+          {marcadores.length > 0 && (
+            <>
+              <h2>Tu ubicación</h2>
+              <MapaConectee marcadores={marcadores} zoom={14} />
             </>
           )}
         </>
@@ -116,6 +139,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
