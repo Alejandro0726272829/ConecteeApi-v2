@@ -17,4 +17,16 @@ function Iconos() {
   );
 }
 
-export default Iconos;
+function Footer() {
+  return (
+    <footer style={{ fontSize: '12px', textAlign: 'center', marginTop: '1rem' }}>
+      <p>
+        Icono de bodega por <a href="http://awicons.com" target="_blank" rel="noopener noreferrer">Lokas Software / AWIcons</a> &nbsp;|&nbsp; 
+        Icono de camión por <a href="https://www.vecteezy.com" target="_blank" rel="noopener noreferrer">Vecteezy</a>
+      </p>
+    </footer>
+  );
+}
+
+export { Iconos, Footer };
+
