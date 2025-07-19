@@ -7,7 +7,7 @@ import logo from './logo.svg';
 import MapaConectee from './components/MapaConectee';
 import UbicacionUsuario from './components/UbicacionUsuario';
 import RutaServicio from './components/RutaServicio';
-import Icono from './components/Icono'; // <-- actualizado aquí
+import Icono from './components/Icono'; // ✅ Importación correcta
 
 function App() {
   const [servicios, setServicios] = useState([]);
@@ -99,7 +99,7 @@ function App() {
           <img src={logo} className="App-logo" alt="logo" />
           <h1>Crear nuevo servicio</h1>
 
-          <Iconos /> {/* Aquí se muestran los íconos de casa y camión */}
+          <Icono /> {/* ✅ Uso correcto del componente Icono */}
           <RutaServicio onServicioCreado={handleServicioCreado} />
           <UbicacionUsuario onUbicacionObtenida={setUbicacionUsuario} />
 
@@ -127,4 +127,3 @@ function App() {
 }
 
 export default App;
-
