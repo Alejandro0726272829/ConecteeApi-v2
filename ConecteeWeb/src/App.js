@@ -7,7 +7,7 @@ import logo from './logo.svg';
 import MapaConectee from './components/MapaConectee';
 import UbicacionUsuario from './components/UbicacionUsuario';
 import RutaServicio from './components/RutaServicio';
-import Iconos from './components/Iconos'; // <-- actualizado aquí
+import Icono from './components/Icono'; // <-- actualizado aquí
 
 function App() {
   const [servicios, setServicios] = useState([]);
