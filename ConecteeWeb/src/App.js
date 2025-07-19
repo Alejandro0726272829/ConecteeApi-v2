@@ -7,7 +7,7 @@ import logo from './logo.svg';
 import MapaConectee from './components/MapaConectee';
 import UbicacionUsuario from './components/UbicacionUsuario';
 import RutaServicio from './components/RutaServicio';
-import Icono from './components/Icono';
+import Iconos from './components/Iconos'; // <-- actualizado aquí
 
 function App() {
   const [servicios, setServicios] = useState([]);
@@ -21,7 +21,6 @@ function App() {
     setError(null);
   };
 
-  // Cargar servicios cuando hay login
   useEffect(() => {
     if (!isLoggedIn) return;
 
@@ -47,13 +46,11 @@ function App() {
     });
   }, [isLoggedIn]);
 
-  // Función para cuando se crea un servicio nuevo
   const handleServicioCreado = (nuevoServicio) => {
     setServicioCreado(nuevoServicio);
     setServicios(prev => [...prev, nuevoServicio]);
   };
 
-  // Marcadores de servicios válidos
   const marcadoresServicios = servicios
     .filter(s => s.origenLat && s.origenLng)
     .map(s => ({
@@ -62,12 +59,10 @@ function App() {
       nombre: s.nombre || 'Origen',
     }));
 
-  // Marcador de usuario
   const marcadorUsuario = ubicacionUsuario
     ? [{ ...ubicacionUsuario, nombre: 'Tu ubicación 📍' }]
     : [];
 
-  // Todos los marcadores para el mapa
   const marcadores = [...marcadoresServicios, ...marcadorUsuario];
 
   const cerrarSesion = () => {
@@ -104,7 +99,7 @@ function App() {
           <img src={logo} className="App-logo" alt="logo" />
           <h1>Crear nuevo servicio</h1>
 
-          <Icono />
+          <Iconos /> {/* Aquí se muestran los íconos de casa y camión */}
           <RutaServicio onServicioCreado={handleServicioCreado} />
           <UbicacionUsuario onUbicacionObtenida={setUbicacionUsuario} />
 
