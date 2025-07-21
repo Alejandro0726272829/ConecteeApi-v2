@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import L from "leaflet";
+import axios from "axios"; // 👈 nuevo import
 import "leaflet/dist/leaflet.css";
 
 // Fix para íconos que no cargan correctamente
@@ -20,7 +21,6 @@ function LocationSelector({ setOrigen, setDestino, origen, destino }) {
       } else if (!destino) {
         setDestino(e.latlng);
       } else {
-        // Si ya hay origen y destino, al siguiente clic resetea y comienza de nuevo
         setOrigen(e.latlng);
         setDestino(null);
       }
@@ -33,23 +33,50 @@ export default function MapaSelectorServicio() {
   const [origen, setOrigen] = useState(null);
   const [destino, setDestino] = useState(null);
   const [descripcion, setDescripcion] = useState("");
+  const [enviando, setEnviando] = useState(false);
 
-  const handleEnviarServicio = () => {
+  const handleEnviarServicio = async () => {
     if (!origen || !destino) {
       alert("Selecciona origen y destino antes de enviar el servicio.");
       return;
     }
-    // Aquí podrías llamar a tu backend con fetch o axios
+
     const nuevoServicio = {
+      usuarioId: "6876a776c267119877b6e4e8", // ⚠️ reemplazar por dinámico si es necesario
       origen: { lat: origen.lat, lng: origen.lng },
       destino: { lat: destino.lat, lng: destino.lng },
       descripcion: descripcion || "Servicio sin descripción",
       fechaServicio: new Date().toISOString(),
       estado: "Pendiente",
-      // agrega lo que necesites, clienteId, conductorId etc.
     };
-    console.log("Servicio a enviar:", nuevoServicio);
-    alert("Servicio listo para enviar. Revisa consola.");
+
+    try {
+      setEnviando(true);
+
+      const response = await axios.post(
+        "https://conecteeapi-v3.onrender.com/api/Servicios",
+        nuevoServicio,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Authorization: `Bearer ${localStorage.getItem("token")}`, // si usas JWT
+          },
+        }
+      );
+
+      console.log("✅ Servicio creado:", response.data);
+      alert("Servicio enviado correctamente.");
+
+      // Resetear formulario
+      setOrigen(null);
+      setDestino(null);
+      setDescripcion("");
+    } catch (error) {
+      console.error("❌ Error al enviar servicio:", error);
+      alert("Hubo un error al enviar el servicio.");
+    } finally {
+      setEnviando(false);
+    }
   };
 
   return (
@@ -99,20 +126,22 @@ export default function MapaSelectorServicio() {
 
       <button
         onClick={handleEnviarServicio}
+        disabled={enviando}
         style={{
           marginTop: 15,
           padding: "10px 20px",
-          backgroundColor: "#007bff",
+          backgroundColor: enviando ? "#999" : "#007bff",
           color: "white",
           border: "none",
           borderRadius: 6,
-          cursor: "pointer",
+          cursor: enviando ? "not-allowed" : "pointer",
           fontWeight: "bold",
           width: "100%",
         }}
       >
-        Enviar Servicio
+        {enviando ? "Enviando..." : "Enviar Servicio"}
       </button>
     </div>
   );
 }
+
