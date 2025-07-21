@@ -16,7 +16,8 @@ namespace ConecteeApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get() => Ok(await _servicioService.GetAllAsync());
+        public async Task<IActionResult> Get() =>
+            Ok(await _servicioService.GetAllAsync());
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
@@ -36,6 +37,8 @@ namespace ConecteeApi.Controllers
                 Destino = dto.Destino,
                 Costo = dto.Costo,
                 Estado = dto.Estado,
+                CoordenadaOrigen = dto.CoordenadaOrigen,
+                CoordenadaDestino = dto.CoordenadaDestino,
                 Fecha = DateTime.UtcNow,
                 FechaSolicitud = DateTime.UtcNow
             };
@@ -59,6 +62,8 @@ namespace ConecteeApi.Controllers
                 Destino = dto.Destino,
                 Costo = dto.Costo,
                 Estado = dto.Estado,
+                CoordenadaOrigen = dto.CoordenadaOrigen,
+                CoordenadaDestino = dto.CoordenadaDestino,
                 Fecha = existing.Fecha,
                 FechaSolicitud = existing.FechaSolicitud
             };
@@ -72,9 +77,11 @@ namespace ConecteeApi.Controllers
         {
             var servicio = await _servicioService.GetByIdAsync(id);
             if (servicio is null) return NotFound();
+
             await _servicioService.DeleteAsync(id);
             return NoContent();
         }
     }
 }
+
 
