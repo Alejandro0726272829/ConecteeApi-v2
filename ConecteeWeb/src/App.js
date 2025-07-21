@@ -4,10 +4,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Login from './components/Login';
 import logo from './logo.svg';
-import MapaConectee from './components/MapaConectee';
+import MapaFormularioServicio from './components/MapaFormularioServicio'; // ✅ Nombre corregido
 import UbicacionUsuario from './components/UbicacionUsuario';
 import RutaServicio from './components/RutaServicio';
-import Icono from './components/Icono'; // ✅ Importación correcta
+import Icono from './components/Icono';
 
 function App() {
   const [servicios, setServicios] = useState([]);
@@ -99,7 +99,7 @@ function App() {
           <img src={logo} className="App-logo" alt="logo" />
           <h1>Crear nuevo servicio</h1>
 
-          <Icono /> {/* ✅ Uso correcto del componente Icono */}
+          <Icono />
           <RutaServicio onServicioCreado={handleServicioCreado} />
           <UbicacionUsuario onUbicacionObtenida={setUbicacionUsuario} />
 
@@ -117,7 +117,7 @@ function App() {
           {marcadores.length > 0 && (
             <>
               <h2>Mapa</h2>
-              <MapaConectee marcadores={marcadores} zoom={13} />
+              <MapaFormularioServicio marcadores={marcadores} zoom={13} />
             </>
           )}
         </>
