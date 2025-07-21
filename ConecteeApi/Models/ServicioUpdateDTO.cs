@@ -22,5 +22,11 @@ namespace ConecteeApi.Models
 
         [Required]
         public string Estado { get; set; } = null!;
+
+        // 👇 Coordenadas para que puedan actualizarse
+        public double OrigenLat { get; set; }
+        public double OrigenLng { get; set; }
+        public double DestinoLat { get; set; }
+        public double DestinoLng { get; set; }
     }
 }
