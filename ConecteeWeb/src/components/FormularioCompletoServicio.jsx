@@ -1,46 +1,38 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import MapaConectee from './MapaConectee';
+import RutaServicio from './RutaServicio';
 
 function FormularioCompletoServicio({ onServicioCreado }) {
-  const [datos, setDatos] = useState({
-    origen: '',
-    destino: '',
-    material: '',
-    bultos: '',
-    descripcion: '',
-    unidad: '',
-    metodoPago: '',
-    origenLat: '',
-    origenLng: '',
-    destinoLat: '',
-    destinoLng: '',
-  });
-
-  const [mensaje, setMensaje] = useState(null);
-  const [error, setError] = useState(null);
-
-  const handleChange = (e) => {
-    setDatos({ ...datos, [e.target.name]: e.target.value });
-  };
+  const [nombre, setNombre] = useState('');
+  const [origen, setOrigen] = useState({ direccion: '', lat: '', lng: '' });
+  const [destino, setDestino] = useState({ direccion: '', lat: '', lng: '' });
+  const [mostrarRuta, setMostrarRuta] = useState(false);
+  const [mensaje, setMensaje] = useState('');
 
   const obtenerUbicacion = (tipo) => {
-    if (!navigator.geolocation) {
-      setError('Geolocalización no soportada');
-      return;
-    }
-
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
         if (tipo === 'origen') {
-          setDatos({ ...datos, origenLat: latitude, origenLng: longitude });
+          setOrigen({ ...origen, lat: latitude, lng: longitude });
         } else {
-          setDatos({ ...datos, destinoLat: latitude, destinoLng: longitude });
+          setDestino({ ...destino, lat: latitude, lng: longitude });
         }
       },
-      () => setError('Error al obtener ubicación'),
-      { enableHighAccuracy: true }
+      (err) => {
+        alert('No se pudo obtener tu ubicación');
+      }
     );
+  };
+
+  const manejarClickMapa = (e, tipo) => {
+    const { lat, lng } = e.latlng;
+    if (tipo === 'origen') {
+      setOrigen({ ...origen, lat, lng });
+    } else {
+      setDestino({ ...destino, lat, lng });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -48,89 +40,142 @@ function FormularioCompletoServicio({ onServicioCreado }) {
 
     const token = localStorage.getItem('token');
     if (!token) {
-      setError('Usuario no autenticado');
+      alert('Usuario no autenticado');
       return;
     }
 
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/Servicios`,
-        datos,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    const nuevoServicio = {
+      nombre,
+      origenDireccion: origen.direccion,
+      origenLat: origen.lat,
+      origenLng: origen.lng,
+      destinoDireccion: destino.direccion,
+      destinoLat: destino.lat,
+      destinoLng: destino.lng
+    };
 
-      setMensaje('Servicio creado con éxito');
-      setError(null);
-      onServicioCreado(response.data);
-      setDatos({
-        origen: '',
-        destino: '',
-        material: '',
-        bultos: '',
-        descripcion: '',
-        unidad: '',
-        metodoPago: '',
-        origenLat: '',
-        origenLng: '',
-        destinoLat: '',
-        destinoLng: '',
+    try {
+      const url = `${process.env.REACT_APP_API_URL}/api/Servicios`;
+      const response = await axios.post(url, nuevoServicio, {
+        headers: { Authorization: `Bearer ${token}` }
       });
+
+      onServicioCreado(response.data);
+      setMensaje('✅ Servicio creado con éxito');
+      setNombre('');
+      setOrigen({ direccion: '', lat: '', lng: '' });
+      setDestino({ direccion: '', lat: '', lng: '' });
+      setMostrarRuta(false);
     } catch (err) {
-      setError('Error al crear servicio');
-      setMensaje(null);
+      console.error(err);
+      alert('Error al crear el servicio');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ textAlign: 'left', maxWidth: 500, margin: 'auto' }}>
-      <h2>Nuevo Servicio Completo</h2>
+    <div style={{ padding: 20, backgroundColor: '#222', borderRadius: 8 }}>
+      <h2>Formulario de Servicio</h2>
+      <form onSubmit={handleSubmit} style={{ textAlign: 'left' }}>
+        <div>
+          <label>Nombre del servicio:</label>
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            required
+          />
+        </div>
 
-      <label>Origen:</label>
-      <input name="origen" value={datos.origen} onChange={handleChange} required />
-      <button type="button" onClick={() => obtenerUbicacion('origen')}>📍 Usar ubicación actual</button>
+        <div>
+          <label>Dirección de Origen:</label>
+          <input
+            type="text"
+            value={origen.direccion}
+            onChange={(e) => setOrigen({ ...origen, direccion: e.target.value })}
+          />
+          <button type="button" onClick={() => obtenerUbicacion('origen')}>📍 Usar mi ubicación</button>
+        </div>
 
-      <label>Destino:</label>
-      <input name="destino" value={datos.destino} onChange={handleChange} required />
-      <button type="button" onClick={() => obtenerUbicacion('destino')}>📍 Usar ubicación actual</button>
+        <div>
+          <label>Coordenadas de Origen:</label>
+          <input
+            type="number"
+            placeholder="Lat"
+            value={origen.lat}
+            onChange={(e) => setOrigen({ ...origen, lat: e.target.value })}
+          />
+          <input
+            type="number"
+            placeholder="Lng"
+            value={origen.lng}
+            onChange={(e) => setOrigen({ ...origen, lng: e.target.value })}
+          />
+        </div>
 
-      <label>Material:</label>
-      <input name="material" value={datos.material} onChange={handleChange} required />
+        <div>
+          <label>Dirección de Destino:</label>
+          <input
+            type="text"
+            value={destino.direccion}
+            onChange={(e) => setDestino({ ...destino, direccion: e.target.value })}
+          />
+          <button type="button" onClick={() => obtenerUbicacion('destino')}>📍 Usar mi ubicación</button>
+        </div>
 
-      <label>Bultos:</label>
-      <input name="bultos" type="number" value={datos.bultos} onChange={handleChange} required />
+        <div>
+          <label>Coordenadas de Destino:</label>
+          <input
+            type="number"
+            placeholder="Lat"
+            value={destino.lat}
+            onChange={(e) => setDestino({ ...destino, lat: e.target.value })}
+          />
+          <input
+            type="number"
+            placeholder="Lng"
+            value={destino.lng}
+            onChange={(e) => setDestino({ ...destino, lng: e.target.value })}
+          />
+        </div>
 
-      <label>Descripción:</label>
-      <textarea name="descripcion" value={datos.descripcion} onChange={handleChange} />
+        <button type="button" onClick={() => setMostrarRuta(true)}>
+          Ver ruta en el mapa 🚚
+        </button>
 
-      <label>Unidad requerida:</label>
-      <select name="unidad" value={datos.unidad} onChange={handleChange} required>
-        <option value="">Selecciona</option>
-        <option value="Camión 3.5 t">Camión 3.5 t</option>
-        <option value="Camión 6 t">Camión 6 t</option>
-        <option value="Camioneta">Camioneta</option>
-      </select>
-
-      <label>Método de pago:</label>
-      <select name="metodoPago" value={datos.metodoPago} onChange={handleChange} required>
-        <option value="">Selecciona</option>
-        <option value="Transferencia">Transferencia</option>
-        <option value="PayPal">PayPal</option>
-        <option value="Efectivo">Efectivo</option>
-      </select>
-
-      <br /><br />
-      <button type="submit" style={{ backgroundColor: '#28a745', color: '#fff', padding: '10px', border: 'none' }}>
-        Crear Servicio
-      </button>
+        <button type="submit" style={{ marginLeft: 10 }}>Crear servicio</button>
+      </form>
 
       {mensaje && <p style={{ color: 'lightgreen' }}>{mensaje}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </form>
+
+      {mostrarRuta && origen.lat && destino.lat && (
+        <div style={{ marginTop: 20 }}>
+          <h3>Ruta previa:</h3>
+          <RutaServicio
+            origen={{ lat: origen.lat, lng: origen.lng }}
+            destino={{ lat: destino.lat, lng: destino.lng }}
+          />
+        </div>
+      )}
+
+      <div style={{ marginTop: 20 }}>
+        <h4>Haz clic en el mapa para establecer coordenadas:</h4>
+        <MapaConectee
+          onClick={(e) => {
+            const tipo = window.confirm('¿Asignar como origen?\n(Cancelar = destino)')
+              ? 'origen'
+              : 'destino';
+            manejarClickMapa(e, tipo);
+          }}
+          marcadores={[
+            origen.lat ? { lat: Number(origen.lat), lng: Number(origen.lng), nombre: 'Origen' } : null,
+            destino.lat ? { lat: Number(destino.lat), lng: Number(destino.lng), nombre: 'Destino' } : null,
+          ].filter(Boolean)}
+          zoom={13}
+        />
+      </div>
+    </div>
   );
 }
 
 export default FormularioCompletoServicio;
+
