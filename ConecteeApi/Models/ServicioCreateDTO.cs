@@ -15,3 +15,4 @@ namespace ConecteeApi.Models
         public double DestinoLng { get; set; }
     }
 }
+
