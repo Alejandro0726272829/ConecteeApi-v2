@@ -40,15 +40,6 @@ namespace ConecteeApi.Models
         [BsonElement("coordenadaDestino")]
         public Punto CoordenadaDestino { get; set; } = null!;
     }
-
-    public class Punto
-    {
-        [BsonElement("lat")]
-        public double Lat { get; set; }
-
-        [BsonElement("lng")]
-        public double Lng { get; set; }
-    }
 }
 
 
