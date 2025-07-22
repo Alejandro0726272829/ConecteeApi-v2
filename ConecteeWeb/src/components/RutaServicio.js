@@ -5,9 +5,8 @@ import "leaflet-routing-machine";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
-// ICONOS PERSONALIZADOS
-const truckIconUrl = "https://cdn-icons-png.flaticon.com/512/1995/1995523.png"; // camión
-const homeIconUrl = "https://cdn-icons-png.flaticon.com/512/25/25694.png";      // casa
+const truckIconUrl = "https://cdn-icons-png.flaticon.com/512/1995/1995523.png";
+const homeIconUrl = "https://cdn-icons-png.flaticon.com/512/25/25694.png";
 
 const truckIcon = new L.Icon({
   iconUrl: truckIconUrl,
@@ -28,7 +27,6 @@ function RoutingMachine({ origen, destino, onRouteChange }) {
   const routingControlRef = useRef(null);
 
   useEffect(() => {
-    // Validación estricta para evitar errores si faltan lat o lng
     if (
       !origen ||
       !destino ||
@@ -36,20 +34,16 @@ function RoutingMachine({ origen, destino, onRouteChange }) {
       typeof origen.lng !== "number" ||
       typeof destino.lat !== "number" ||
       typeof destino.lng !== "number"
-    ) return;
+    )
+      return;
 
     if (routingControlRef.current) {
       map.removeControl(routingControlRef.current);
     }
 
     routingControlRef.current = L.Routing.control({
-      waypoints: [
-        L.latLng(origen.lat, origen.lng),
-        L.latLng(destino.lat, destino.lng),
-      ],
-      lineOptions: {
-        styles: [{ color: "#007bff", weight: 5 }],
-      },
+      waypoints: [L.latLng(origen.lat, origen.lng), L.latLng(destino.lat, destino.lng)],
+      lineOptions: { styles: [{ color: "#007bff", weight: 5 }] },
       addWaypoints: false,
       draggableWaypoints: false,
       fitSelectedRoutes: true,
@@ -100,11 +94,7 @@ function MovingMarker({ coordinates }) {
   if (!coordinates || coordinates.length === 0) return null;
 
   return (
-    <Marker
-      position={[coordinates[index].lat, coordinates[index].lng]}
-      icon={truckIcon}
-      ref={markerRef}
-    >
+    <Marker position={[coordinates[index].lat, coordinates[index].lng]} icon={truckIcon} ref={markerRef}>
       <Popup>Conductor en movimiento</Popup>
     </Marker>
   );
@@ -209,7 +199,7 @@ export default function RutaServicio({
           fontWeight: "bold",
         }}
       >
-        Actualizar Ruta
+        Actualizar ruta
       </button>
 
       <MapContainer
@@ -217,51 +207,58 @@ export default function RutaServicio({
         center={[origen.lat, origen.lng]}
         zoom={13}
         scrollWheelZoom={true}
-        style={{ height: "90vh", width: "100%" }}
+        style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
+          attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
         <Marker position={[origen.lat, origen.lng]} icon={homeIcon}>
-          <Popup>{clienteNombre} - Origen</Popup>
+          <Popup>{clienteNombre} (Origen)</Popup>
         </Marker>
 
-        <Marker position={[destino.lat, destino.lng]} icon={homeIcon}>
-          <Popup>{clienteNombre} - Destino</Popup>
+        <Marker position={[destino.lat, destino.lng]} icon={truckIcon}>
+          <Popup>{conductorNombre} (Destino)</Popup>
         </Marker>
 
-        <RoutingMachine
-          key={actualizarKey}
-          origen={origen}
-          destino={destino}
-          onRouteChange={setRouteInfo}
-        />
+        <RoutingMachine origen={origen} destino={destino} onRouteChange={setRouteInfo} />
 
         {mostrarAnimacion && <MovingMarker coordinates={camionCoords} />}
       </MapContainer>
 
-      <div
-        style={{
-          marginTop: 10,
-          backgroundColor: "#222",
-          padding: 15,
-          borderRadius: 8,
-          maxWidth: 600,
-          marginLeft: "auto",
-          marginRight: "auto",
-          fontSize: 16,
-        }}
-      >
-        <p><b>Conductor:</b> {conductorNombre}</p>
-        <p><b>Tiempo de tránsito estimado:</b> {formatTime(tiempoTransito)}</p>
-        <p><b>Tiempo estimado llegada a recolectar:</b> {formatTime(tiempoLlegadaRecolecta)}</p>
-        <p><b>Tiempo estimado entrega:</b> {formatTime(tiempoEntrega)}</p>
-      </div>
+      {routeInfo && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 15,
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "#222",
+            padding: 15,
+            borderRadius: 8,
+            maxWidth: 400,
+            width: "90%",
+            textAlign: "center",
+            boxShadow: "0 0 10px rgba(0,0,0,0.5)",
+          }}
+        >
+          <h3>Detalles de la ruta</h3>
+          <p>
+            Distancia: {(routeInfo.distance / 1000).toFixed(2)} km
+            <br />
+            Tiempo estimado: {formatTime(routeInfo.time)}
+            <br />
+            Tiempo llegada a recolecta: {formatTime(tiempoLlegadaRecolecta)}
+            <br />
+            Tiempo entrega estimado: {formatTime(tiempoEntrega)}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
+
 
   
 
