@@ -37,8 +37,16 @@ namespace ConecteeApi.Controllers
                 Destino = dto.Destino,
                 Costo = dto.Costo,
                 Estado = dto.Estado,
-                CoordenadaOrigen = dto.CoordenadaOrigen,
-                CoordenadaDestino = dto.CoordenadaDestino,
+                CoordenadaOrigen = new Coordenada
+                {
+                    Latitud = dto.OrigenLat,
+                    Longitud = dto.OrigenLng
+                },
+                CoordenadaDestino = new Coordenada
+                {
+                    Latitud = dto.DestinoLat,
+                    Longitud = dto.DestinoLng
+                },
                 Fecha = DateTime.UtcNow,
                 FechaSolicitud = DateTime.UtcNow
             };
@@ -62,8 +70,16 @@ namespace ConecteeApi.Controllers
                 Destino = dto.Destino,
                 Costo = dto.Costo,
                 Estado = dto.Estado,
-                CoordenadaOrigen = dto.CoordenadaOrigen,
-                CoordenadaDestino = dto.CoordenadaDestino,
+                CoordenadaOrigen = new Coordenada
+                {
+                    Latitud = dto.OrigenLat,
+                    Longitud = dto.OrigenLng
+                },
+                CoordenadaDestino = new Coordenada
+                {
+                    Latitud = dto.DestinoLat,
+                    Longitud = dto.DestinoLng
+                },
                 Fecha = existing.Fecha,
                 FechaSolicitud = existing.FechaSolicitud
             };
