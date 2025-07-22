@@ -12,7 +12,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// Componente que permite seleccionar origen/destino con clic en mapa
+// Componente para seleccionar origen/destino con clic
 function LocationSelector({ setOrigen, setDestino, origen, destino }) {
   useMapEvents({
     click(e) {
@@ -29,7 +29,7 @@ function LocationSelector({ setOrigen, setDestino, origen, destino }) {
   return null;
 }
 
-export default function MapaFormularioServicio() {
+export default function MapaFormularioServicio({ onServicioCreado }) {
   const [origen, setOrigen] = useState(null);
   const [destino, setDestino] = useState(null);
   const [descripcion, setDescripcion] = useState("");
@@ -47,7 +47,7 @@ export default function MapaFormularioServicio() {
     }
 
     const servicio = {
-      usuarioId: "1234567890abcdef", // Aquí puedes usar localStorage o tu estado global
+      usuarioId: "1234567890abcdef", // Ajusta o usa token/localStorage
       origen: {
         lat: origen.lat,
         lng: origen.lng,
@@ -68,14 +68,26 @@ export default function MapaFormularioServicio() {
     };
 
     try {
-      console.log("Enviando servicio:", servicio);
-      const response = await axios.post("https://conecteeapi-v3.onrender.com/api/Servicios", servicio, {
-        headers: {
-          "Content-Type": "application/json",
-          // Authorization: "Bearer TU_TOKEN_JWT" // si ya lo manejas
-        },
-      });
+      const response = await axios.post(
+        "https://conecteeapi-v3.onrender.com/api/Servicios",
+        servicio,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Authorization: "Bearer TU_TOKEN" // si usas auth
+          },
+        }
+      );
       alert("Servicio enviado correctamente.");
+
+      if (typeof onServicioCreado === "function") {
+        onServicioCreado({
+          origen: servicio.origen,
+          destino: servicio.destino,
+          descripcion: servicio.descripcion,
+          // agrega lo que necesites enviar a RutaServicio
+        });
+      }
     } catch (error) {
       console.error("Error al enviar:", error);
       alert("Error al enviar servicio.");
@@ -230,3 +242,4 @@ export default function MapaFormularioServicio() {
     </div>
   );
 }
+
