@@ -1,32 +1,101 @@
-using System.ComponentModel.DataAnnotations;
+using ConecteeApi.Interfaces;
+using ConecteeApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace ConecteeApi.Models
+namespace ConecteeApi.Controllers
 {
-    public class ServicioUpdateDTO
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ServiciosController : ControllerBase
     {
-        [Required]
-        public string UsuarioId { get; set; } = null!;
+        private readonly IBaseService<Servicio> _servicioService;
 
-        [Required]
-        [StringLength(200)]
-        public string Descripcion { get; set; } = null!;
+        public ServiciosController(IBaseService<Servicio> servicioService)
+        {
+            _servicioService = servicioService;
+        }
 
-        [Required]
-        public string Origen { get; set; } = null!;
+        [HttpGet]
+        public async Task<IActionResult> Get() =>
+            Ok(await _servicioService.GetAllAsync());
 
-        [Required]
-        public string Destino { get; set; } = null!;
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            var servicio = await _servicioService.GetByIdAsync(id);
+            return servicio is null ? NotFound() : Ok(servicio);
+        }
 
-        [Range(0.01, double.MaxValue, ErrorMessage = "El costo debe ser mayor que cero.")]
-        public decimal Costo { get; set; }
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] ServicioCreateDTO dto)
+        {
+            var servicio = new Servicio
+            {
+                UsuarioId = dto.UsuarioId,
+                Descripcion = dto.Descripcion,
+                Origen = dto.Origen,
+                Destino = dto.Destino,
+                Costo = dto.Costo,
+                Estado = dto.Estado,
+                CoordenadaOrigen = new Punto
+                {
+                    Lat = dto.OrigenLat,
+                    Lng = dto.OrigenLng
+                },
+                CoordenadaDestino = new Punto
+                {
+                    Lat = dto.DestinoLat,
+                    Lng = dto.DestinoLng
+                },
+                Fecha = DateTime.UtcNow,
+                FechaSolicitud = DateTime.UtcNow
+            };
 
-        [Required]
-        public string Estado { get; set; } = null!;
+            await _servicioService.CreateAsync(servicio);
+            return CreatedAtAction(nameof(Get), new { id = servicio.Id }, servicio);
+        }
 
-        // 👇 Coordenadas para que puedan actualizarse
-        public double OrigenLat { get; set; }
-        public double OrigenLng { get; set; }
-        public double DestinoLat { get; set; }
-        public double DestinoLng { get; set; }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(string id, [FromBody] ServicioUpdateDTO dto)
+        {
+            var existing = await _servicioService.GetByIdAsync(id);
+            if (existing is null) return NotFound();
+
+            var servicioActualizado = new Servicio
+            {
+                Id = id,
+                UsuarioId = dto.UsuarioId,
+                Descripcion = dto.Descripcion,
+                Origen = dto.Origen,
+                Destino = dto.Destino,
+                Costo = dto.Costo,
+                Estado = dto.Estado,
+                CoordenadaOrigen = new Punto
+                {
+                    Lat = dto.OrigenLat,
+                    Lng = dto.OrigenLng
+                },
+                CoordenadaDestino = new Punto
+                {
+                    Lat = dto.DestinoLat,
+                    Lng = dto.DestinoLng
+                },
+                Fecha = existing.Fecha,
+                FechaSolicitud = existing.FechaSolicitud
+            };
+
+            await _servicioService.UpdateAsync(id, servicioActualizado);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var servicio = await _servicioService.GetByIdAsync(id);
+            if (servicio is null) return NotFound();
+
+            await _servicioService.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }
