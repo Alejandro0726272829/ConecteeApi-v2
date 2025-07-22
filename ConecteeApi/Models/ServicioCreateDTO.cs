@@ -1,42 +1,20 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace ConecteeApi.Models
 {
-    public class ServicioCreateDTO
+    public class ServicioUpdateDTO
     {
-        [Required]
-        public string UsuarioId { get; set; } = null!;
-
-        [Required]
-        [StringLength(200)]
-        public string Descripcion { get; set; } = null!;
-
-        [Required]
-        public string Origen { get; set; } = null!;
-
-        [Required]
-        public string Destino { get; set; } = null!;
-
-        [Range(0.01, double.MaxValue, ErrorMessage = "El costo debe ser mayor que cero.")]
+        public string UsuarioId { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+        public string Origen { get; set; } = string.Empty;
+        public string Destino { get; set; } = string.Empty;
         public decimal Costo { get; set; }
+        public string Estado { get; set; } = string.Empty;
 
-        [Required]
-        public string Estado { get; set; } = null!;
-
-        // Coordenadas para el origen
-        [Required]
         public double OrigenLat { get; set; }
-
-        [Required]
         public double OrigenLng { get; set; }
-
-        // Coordenadas para el destino
-        [Required]
         public double DestinoLat { get; set; }
-
-        [Required]
         public double DestinoLng { get; set; }
     }
 }
+
 
 
