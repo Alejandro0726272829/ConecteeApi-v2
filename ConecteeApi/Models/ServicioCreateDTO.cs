@@ -1,6 +1,6 @@
 namespace ConecteeApi.Models
 {
-    public class ServicioUpdateDTO
+    public class ServicioCreateDTO
     {
         public string UsuarioId { get; set; } = string.Empty;
         public string Descripcion { get; set; } = string.Empty;
@@ -15,6 +15,3 @@ namespace ConecteeApi.Models
         public double DestinoLng { get; set; }
     }
 }
-
-
-
