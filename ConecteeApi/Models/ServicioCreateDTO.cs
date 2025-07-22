@@ -23,11 +23,19 @@ namespace ConecteeApi.Models
         [Required]
         public string Estado { get; set; } = null!;
 
+        // Coordenadas para el origen
         [Required]
-        public Punto CoordenadaOrigen { get; set; } = null!;
+        public double OrigenLat { get; set; }
 
         [Required]
-        public Punto CoordenadaDestino { get; set; } = null!;
+        public double OrigenLng { get; set; }
+
+        // Coordenadas para el destino
+        [Required]
+        public double DestinoLat { get; set; }
+
+        [Required]
+        public double DestinoLng { get; set; }
     }
 }
 
