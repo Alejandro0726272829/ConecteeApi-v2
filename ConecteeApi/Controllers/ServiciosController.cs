@@ -1,6 +1,7 @@
 using ConecteeApi.Interfaces;
 using ConecteeApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ConecteeApi.Controllers
 {
@@ -37,15 +38,15 @@ namespace ConecteeApi.Controllers
                 Destino = dto.Destino,
                 Costo = dto.Costo,
                 Estado = dto.Estado,
-                CoordenadaOrigen = new Coordenada
+                CoordenadaOrigen = new Punto
                 {
-                    Latitud = dto.OrigenLat,
-                    Longitud = dto.OrigenLng
+                    Lat = dto.OrigenLat,
+                    Lng = dto.OrigenLng
                 },
-                CoordenadaDestino = new Coordenada
+                CoordenadaDestino = new Punto
                 {
-                    Latitud = dto.DestinoLat,
-                    Longitud = dto.DestinoLng
+                    Lat = dto.DestinoLat,
+                    Lng = dto.DestinoLng
                 },
                 Fecha = DateTime.UtcNow,
                 FechaSolicitud = DateTime.UtcNow
@@ -70,15 +71,15 @@ namespace ConecteeApi.Controllers
                 Destino = dto.Destino,
                 Costo = dto.Costo,
                 Estado = dto.Estado,
-                CoordenadaOrigen = new Coordenada
+                CoordenadaOrigen = new Punto
                 {
-                    Latitud = dto.OrigenLat,
-                    Longitud = dto.OrigenLng
+                    Lat = dto.OrigenLat,
+                    Lng = dto.OrigenLng
                 },
-                CoordenadaDestino = new Coordenada
+                CoordenadaDestino = new Punto
                 {
-                    Latitud = dto.DestinoLat,
-                    Longitud = dto.DestinoLng
+                    Lat = dto.DestinoLat,
+                    Lng = dto.DestinoLng
                 },
                 Fecha = existing.Fecha,
                 FechaSolicitud = existing.FechaSolicitud
@@ -99,6 +100,7 @@ namespace ConecteeApi.Controllers
         }
     }
 }
+
 
 
 
