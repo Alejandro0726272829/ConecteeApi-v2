@@ -2,12 +2,12 @@ namespace ConecteeApi.Models
 {
     public class ServicioUpdateDTO
     {
-        public string UsuarioId { get; set; }
-        public string Descripcion { get; set; }
-        public string Origen { get; set; }
-        public string Destino { get; set; }
+        public string UsuarioId { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+        public string Origen { get; set; } = string.Empty;
+        public string Destino { get; set; } = string.Empty;
         public decimal Costo { get; set; }
-        public string Estado { get; set; }
+        public string Estado { get; set; } = string.Empty;
 
         public double OrigenLat { get; set; }
         public double OrigenLng { get; set; }
