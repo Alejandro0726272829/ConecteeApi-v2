@@ -23,11 +23,11 @@ namespace ConecteeApi.Models
         [Required]
         public string Estado { get; set; } = null!;
 
-        // 👇 Coordenadas necesarias para mapa
-        public double OrigenLat { get; set; }
-        public double OrigenLng { get; set; }
-        public double DestinoLat { get; set; }
-        public double DestinoLng { get; set; }
+        [Required]
+        public Punto CoordenadaOrigen { get; set; } = null!;
+
+        [Required]
+        public Punto CoordenadaDestino { get; set; } = null!;
     }
 }
 
