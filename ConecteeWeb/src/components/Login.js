@@ -8,7 +8,7 @@ function Login({ onLoginSuccess }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [mostrarOlvido, setMostrarOlvido] = useState(false); // 🔑 nuevo estado
+  const [mostrarOlvido, setMostrarOlvido] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,7 +22,12 @@ function Login({ onLoginSuccess }) {
       console.log('Respuesta del backend:', response.data);
 
       const token = response.data.token;
+      const usuarioId = response.data.usuarioId; // <- ✅ si lo devuelve el backend
+
       localStorage.setItem('token', token);
+      if (usuarioId) {
+        localStorage.setItem('usuarioId', usuarioId); // <- ✅ para usarlo al crear servicios
+      }
 
       console.log('Token recibido:', token);
 
@@ -40,7 +45,6 @@ function Login({ onLoginSuccess }) {
     }
   };
 
-  // 🔁 Mostrar pantalla de recuperación si se activa
   if (mostrarOlvido) {
     return <ForgotPassword onVolverAlLogin={() => setMostrarOlvido(false)} />;
   }
@@ -89,7 +93,6 @@ function Login({ onLoginSuccess }) {
           {loading ? 'Ingresando...' : 'Iniciar sesión'}
         </button>
 
-        {/* 🔗 Enlace para recuperar contraseña */}
         <p style={{ marginTop: 15 }}>
           <button
             onClick={() => setMostrarOlvido(true)}
@@ -111,6 +114,7 @@ function Login({ onLoginSuccess }) {
 }
 
 export default Login;
+
 
 
 
