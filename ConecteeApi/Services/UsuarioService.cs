@@ -1,6 +1,5 @@
 using ConecteeApi.Interfaces;
 using ConecteeApi.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
@@ -11,11 +10,9 @@ namespace ConecteeApi.Services
     {
         private readonly IMongoCollection<Usuario> _usuarios;
 
-        public UsuarioService(IOptions<MongoDBSettings> settings)
+        public UsuarioService(MongoService mongoService)
         {
-            var client = new MongoClient(settings.Value.ConnectionString);
-            var database = client.GetDatabase(settings.Value.DatabaseName);
-            _usuarios = database.GetCollection<Usuario>(settings.Value.UsuarioCollectionName);
+            _usuarios = mongoService.GetCollectionFromSettings<Usuario>("Usuario");
         }
 
         public async Task<List<Usuario>> GetAllAsync() =>
