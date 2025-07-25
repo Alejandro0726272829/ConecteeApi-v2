@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Login from './components/Login';
 import logo from './logo.svg';
-import MapaFormularioServicio from './components/MapaFormularioServicio'; // ✅ Nombre corregido
+import MapaFormularioServicio from './components/MapaFormularioServicio';
 import UbicacionUsuario from './components/UbicacionUsuario';
 import RutaServicio from './components/RutaServicio';
 import Icono from './components/Icono';
@@ -52,11 +52,11 @@ function App() {
   };
 
   const marcadoresServicios = servicios
-    .filter(s => s.origenLat && s.origenLng)
+    .filter(s => s.origen?.lat && s.origen?.lng)
     .map(s => ({
-      lat: Number(s.origenLat),
-      lng: Number(s.origenLng),
-      nombre: s.nombre || 'Origen',
+      lat: Number(s.origen.lat),
+      lng: Number(s.origen.lng),
+      nombre: s.descripcion || 'Servicio',
     }));
 
   const marcadorUsuario = ubicacionUsuario
@@ -100,8 +100,10 @@ function App() {
           <h1>Crear nuevo servicio</h1>
 
           <Icono />
-          <RutaServicio onServicioCreado={handleServicioCreado} />
           <UbicacionUsuario onUbicacionObtenida={setUbicacionUsuario} />
+
+          {/* Aquí insertamos el mapa con formulario */}
+          <MapaFormularioServicio onServicioCreado={handleServicioCreado} />
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -109,17 +111,13 @@ function App() {
           <ul>
             {servicios.map(servicio => (
               <li key={servicio._id || servicio.id}>
-                {servicio.nombre || 'Servicio sin nombre'}
+                {servicio.descripcion || 'Servicio sin descripción'}
               </li>
             ))}
           </ul>
 
-          {marcadores.length > 0 && (
-            <>
-              <h2>Mapa</h2>
-              <MapaFormularioServicio marcadores={marcadores} zoom={13} />
-            </>
-          )}
+          {/* Puedes dejar esta línea si aún usas RutaServicio */}
+          {/* <RutaServicio onServicioCreado={handleServicioCreado} /> */}
         </>
       )}
     </div>
@@ -127,3 +125,4 @@ function App() {
 }
 
 export default App;
+
