@@ -2,6 +2,8 @@ using ConecteeApi.Interfaces;
 using ConecteeApi.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ConecteeApi.Services
 {
@@ -32,4 +34,5 @@ namespace ConecteeApi.Services
             await _servicios.DeleteOneAsync(s => s.Id == id);
     }
 }
+
 
