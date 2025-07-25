@@ -1,6 +1,5 @@
 using ConecteeApi.Interfaces;
 using ConecteeApi.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,11 +10,9 @@ namespace ConecteeApi.Services
     {
         private readonly IMongoCollection<Servicio> _servicios;
 
-        public ServicioService(IOptions<MongoDBSettings> settings)
+        public ServicioService(MongoService mongoService)
         {
-            var client = new MongoClient(settings.Value.ConnectionString);
-            var database = client.GetDatabase(settings.Value.DatabaseName);
-            _servicios = database.GetCollection<Servicio>(settings.Value.ServicioCollectionName);
+            _servicios = mongoService.GetCollectionFromSettings<Servicio>("Servicio");
         }
 
         public async Task<List<Servicio>> GetAllAsync() =>
