@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+
 namespace ConecteeApi.Models
 {
     public class MongoDBSettings
@@ -8,3 +10,4 @@ namespace ConecteeApi.Models
         public string ServicioCollectionName { get; set; } = null!;
     }
 }
+
