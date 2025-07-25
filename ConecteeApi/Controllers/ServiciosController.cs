@@ -47,9 +47,8 @@ namespace ConecteeApi.Controllers
                 {
                     Lat = dto.DestinoLat,
                     Lng = dto.DestinoLng
-                },
-                Fecha = DateTime.UtcNow,
-                FechaSolicitud = DateTime.UtcNow
+                }
+                // Fecha y FechaSolicitud eliminados
             };
 
             await _servicioService.CreateAsync(servicio);
@@ -80,9 +79,8 @@ namespace ConecteeApi.Controllers
                 {
                     Lat = dto.DestinoLat,
                     Lng = dto.DestinoLng
-                },
-                Fecha = existing.Fecha,
-                FechaSolicitud = existing.FechaSolicitud
+                }
+                // Fecha y FechaSolicitud eliminados
             };
 
             await _servicioService.UpdateAsync(id, servicioActualizado);
