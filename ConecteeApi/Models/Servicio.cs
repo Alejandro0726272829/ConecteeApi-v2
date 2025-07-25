@@ -1,6 +1,5 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
 
 namespace ConecteeApi.Models
 {
@@ -28,12 +27,6 @@ namespace ConecteeApi.Models
         [BsonElement("estado")]
         public string Estado { get; set; } = null!;
 
-        [BsonElement("fecha")]
-        public DateTime Fecha { get; set; }
-
-        [BsonElement("fechaSolicitud")]
-        public DateTime FechaSolicitud { get; set; }
-
         [BsonElement("coordenadaOrigen")]
         public Punto CoordenadaOrigen { get; set; } = null!;
 
@@ -41,5 +34,6 @@ namespace ConecteeApi.Models
         public Punto CoordenadaDestino { get; set; } = null!;
     }
 }
+
 
 
