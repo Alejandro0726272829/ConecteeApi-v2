@@ -20,7 +20,10 @@ namespace ConecteeApi.Controllers
         private readonly IConfiguration _configuration;
         private readonly IPasswordResetService _passwordResetService;
 
-        public AuthController(UsuarioService usuarioService, IConfiguration configuration, IPasswordResetService passwordResetService)
+        public AuthController(
+            UsuarioService usuarioService,
+            IConfiguration configuration,
+            IPasswordResetService passwordResetService)
         {
             _usuarioService = usuarioService;
             _configuration = configuration;
@@ -46,7 +49,6 @@ namespace ConecteeApi.Controllers
             };
 
             await _usuarioService.AddUsuarioAsync(usuario);
-
             return Ok("Usuario registrado correctamente.");
         }
 
@@ -67,8 +69,8 @@ namespace ConecteeApi.Controllers
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, usuario.Id ?? ""),
-                new Claim(ClaimTypes.Name, usuario.Nombre)
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id ?? string.Empty),
+                new Claim(ClaimTypes.Name, usuario.Nombre ?? string.Empty),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
@@ -128,5 +130,6 @@ namespace ConecteeApi.Controllers
         }
     }
 }
+
 
 
